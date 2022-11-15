@@ -1,4 +1,5 @@
 import '/@/design/index.less';
+
 // 注册 windi
 import 'virtual:windi-base.css';
 import 'virtual:windi-components.css';
@@ -20,6 +21,9 @@ import { registerThirdComp } from '/@/settings/registerThirdComp';
 import { useSso } from '/@/hooks/web/useSso';
 import { registerPackages } from '/@/utils/monorepo/registerPackages';
 
+import { setupStorage } from '/@/flow/storage';
+import { registerIconsComp } from '/@/flow/icons';
+
 // 在本地开发中引入的,以提高浏览器响应速度
 if (import.meta.env.DEV) {
   import('ant-design-vue/dist/antd.less');
@@ -34,6 +38,9 @@ async function bootstrap() {
   // 配置存储
   setupStore(app);
 
+  // 配置flow存储
+  setupStorage(app);
+
   // 初始化内部系统配置
   initAppConfigStore();
 
@@ -42,6 +49,9 @@ async function bootstrap() {
 
   // 注册全局组件
   registerGlobComp(app);
+
+  // 按需注册flow ICON 组件
+  registerIconsComp(app);
 
   //CAS单点登录
   await useSso().ssoLogin();
