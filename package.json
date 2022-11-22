@@ -97,7 +97,12 @@
     "resizable-dom": "^1.0.2",
     "vue-lsp": "^1.0.2",
     "vue3-colorpicker": "^2.0.4",
-    "vue3-json-viewer": "^2.2.2"
+    "vue3-json-viewer": "^2.2.2",
+    "ace-builds": "^1.4.12",
+    "core-js": "^3.6.5",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2",
+    "wangeditor": "^4.6.13"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
@@ -183,7 +188,11 @@
     "vite-plugin-windicss": "^1.8.4",
     "vue-eslint-parser": "^8.3.0",
     "vue-tsc": "^0.33.9",
-    "less-loader": "^11.0.0"
+    "less-loader": "^11.0.0",
+    "@types/lodash": "^4.14.168",
+    "@types/uuid": "^8.3.0",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2"
   },
   "resolutions": {
     "//": "Used to install imagemin dependencies, because imagemin may not be installed in China. If it is abroad, you can delete it",
