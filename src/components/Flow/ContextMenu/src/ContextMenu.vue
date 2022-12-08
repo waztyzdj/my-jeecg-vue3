@@ -110,7 +110,7 @@
           if (!unref(showRef)) return null;
 
           return (
-            <Menu.SubMenu key={label} disabled={disabled} popupClassName={`${prefixCls}__popup`}>
+            <Menu.SubMenu key={label} disabled={disabled} >
               {{
                 title: () => <ItemContent {...contentProps} />,
                 default: () => renderMenuItem(children),
@@ -135,8 +135,9 @@
     },
   });
 </script>
-<style lang="less">
+<style lang="less" scoped>
   .context-menu {
+    z-index: 9999;
     &__item {
       margin: 0px !important;
 

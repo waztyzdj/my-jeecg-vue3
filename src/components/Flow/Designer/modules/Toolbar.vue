@@ -17,13 +17,13 @@
     </div>
 
     <div class="flow-header-option__buttons">
-      <a-tooltip title="生成流程图片" placement="bottom">
+      <!-- <a-tooltip title="生成流程图片" placement="bottom">
         <ant-button @click="emits('generateFlowImage')" class="flow-header-option__button" size="small">
           <template #icon>
             <component :is="'PictureOutlined'" />
           </template>
         </ant-button>
-      </a-tooltip>
+      </a-tooltip> -->
 
       <a-popconfirm
         title="确认要重新绘制吗？"

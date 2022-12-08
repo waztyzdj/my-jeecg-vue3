@@ -9,8 +9,8 @@
         </span>
       </template>
       <a-form layout="vertical">
-        <a-form-item label="流程id">
-          <a-input :value="flowData.attr.id" disabled />
+        <a-form-item label="流程名称">
+          <a-input :value="flowData.attr.flowName" disabled />
         </a-form-item>
       </a-form>
     </a-tab-pane>
@@ -26,9 +26,6 @@
         <a-form-item label="类型">
           <a-tag color="purple">{{ currentSelect.type }}</a-tag>
         </a-form-item>
-        <a-form-item label="id">
-          <a-input :value="currentSelect.id" disabled />
-        </a-form-item>
         <a-form-item label="名称" v-if="isAllowChange(currentSelect.type as NodesType)">
           <a-input
             placeholder="请输入节点名称"
@@ -36,6 +33,21 @@
             @change="nodeNameChange"
           />
         </a-form-item>
+        <template v-if="currentSelect.type=='common'">
+        <a-form-item label="流转类型" required>
+          <a-select :value="(currentSelect as INode)?.flowType" 
+            @change="flowTypeChange">
+            <a-select-option value="parallel">并行</a-select-option>
+            <a-select-option value="serial">串行</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="是否允许回退">
+          <a-checkbox :checked="(currentSelect as INode)?.isBack" @change="isBackChange"/>
+        </a-form-item>
+        <a-form-item label="是否自我循环">
+          <a-checkbox :checked="(currentSelect as INode)?.isLoop" @change="isLoopChange"/>
+        </a-form-item>
+        </template>
       </a-form>
     </a-tab-pane>
     <!-- 连线属性 -->
@@ -47,14 +59,11 @@
         </span>
       </template>
       <a-form layout="vertical">
-        <a-form-item label="id">
-          <a-input :value="currentSelect.id" disabled />
-        </a-form-item>
         <a-form-item label="源节点">
-          <a-input :value="(currentSelect as ILink)?.sourceId" disabled />
+          <a-input :value="(currentSelect as ILink)?.sourceName" disabled />
         </a-form-item>
         <a-form-item label="目标节点">
-          <a-input :value="(currentSelect as ILink)?.targetId" disabled />
+          <a-input :value="(currentSelect as ILink)?.targetName" disabled />
         </a-form-item>
         <a-form-item label="文本">
           <a-input :value="(currentSelect as ILink)?.label" @change="linkLabelChange" />
@@ -94,6 +103,27 @@
   // 修改节点名称
   function nodeNameChange(e: ChangeEvent) {
     (currentSelect.value as INode).nodeName = e.target.value ?? '';
+    // 同时修改连线的节点名称
+    props.flowData.linkList.forEach((link: ILink) => {
+      if(link.sourceId === currentSelect.value.id) {
+        link.sourceName = e.target.value ?? '';
+      }
+      if(link.targetId === currentSelect.value.id) {
+        link.targetName = e.target.value ?? '';
+      }
+    });
+  }
+  // 修改流转类型
+  function flowTypeChange(value) {
+    (currentSelect.value as INode).flowType = value ?? '';
+  }
+  // 修改是否允许回退
+  function isBackChange(e) {
+    (currentSelect.value as INode).isBack = e.target.checked ?? '';
+  }
+  // 修改是否自我循环
+  function isLoopChange(e) {
+    (currentSelect.value as INode).isLoop = e.target.checked ?? '';
   }
 
   // 是否可以修改节点名称

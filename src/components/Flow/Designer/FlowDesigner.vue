@@ -1,10 +1,11 @@
 <template>
-  <a-layout class="flow-wrapper">
+  <a-layout class="flow-wrapper" style="padding:0px;">
     <!-- 左侧边组件元素 -->
-    <flow-element @setDragInfo="setDragInfo" />
+    <flow-element v-if="flowData.attr.status==='0'" @setDragInfo="setDragInfo" />
     <a-layout>
       <!-- 工具区 -->
       <Toolbar
+        v-if="flowData.attr.status==='0'" 
         :currentTool="currentTool"
         :flowData="flowData"
         @generateFlowImage="
@@ -126,21 +127,6 @@
   // 测试弹窗显隐
   const testVisible = ref<boolean>(false);
 
-  // 流程DSL
-  const flowData = reactive<Recordable>({
-    nodeList: [],
-    linkList: [],
-    attr: {
-      id: '',
-    },
-    config: {
-      showGrid: true,
-      showGridText: '隐藏网格',
-      showGridIcon: 'EyeOutlined',
-    },
-    status: unref(flowConfig).flowStatus.CREATE,
-  });
-
   // 当前选择节点
   const currentSelect = ref<INode | ILink>();
 
@@ -153,21 +139,45 @@
     belongTo: null,
   });
 
-  // 初始化流程图
-  function initFlow() {
-    if (flowData.status === unref(flowConfig).flowStatus.CREATE) {
-      flowData.attr.id = 'flow-' + utils.getId();
-    } else {
-      loadFlow();
-    }
+  // 流程DSL
+  const flowData = reactive<Recordable>({
+    nodeList: [],
+    linkList: [],
+    attr: {
+      id: '',
+      flowName: '',
+      status: '0'
+    },
+    config: {
+      showGrid: true,
+      showGridText: '隐藏网格',
+      showGridIcon: 'EyeOutlined',
+    },
+    status: unref(flowConfig).flowStatus.CREATE,
+  });
+
+  const emits = defineEmits([
+    'saveFlow',
+  ]);
+
+  defineExpose({
+    loadFlow,
+    getFlowDataConfigJson
+  })
+
+  function getFlowDataConfigJson() {
+    console.log("getFlowDataConfigJson");
+    console.log(JSON.stringify(flowData));
+    return JSON.stringify(flowData);
   }
 
   // 渲染流程
-  async function loadFlow(str = '') {
+  async function loadFlow(str = '', status = '0') {
     clear();
     await nextTick();
     const loadData = JSON.parse(str);
     flowData.attr = loadData.attr;
+    flowData.attr.status = status;
     flowData.config = loadData.config;
     flowData.status = unref(flowConfig).flowStatus.LOADING;
     unref(plumb).batch(async () => {
@@ -260,7 +270,13 @@
       o.type = 'link';
       o.id = id;
       o.sourceId = conn.sourceId;
+      o.sourceName = flowData.nodeList.find(
+        (node: INode) => node.id === o.sourceId,
+      ).nodeName;
       o.targetId = conn.targetId;
+      o.targetName = flowData.nodeList.find(
+        (node: INode) => node.id === o.targetId,
+      ).nodeName;
       o.label = label;
       o.cls = {
         linkType: unref(flowConfig).jsPlumbInsConfig.Connector[0],
@@ -359,12 +375,8 @@
 
   // 保存流程
   function saveFlow() {
-    let flowObj = Object.assign({}, flowData);
-
     if (!checkFlow()) return;
-    flowObj.status = unref(flowConfig).flowStatus.SAVE;
-    message.success('保存流程成功！请查看控制台。');
-    console.log(flowObj);
+    emits('saveFlow');
   }
 
   // 设置dragInfo
@@ -489,8 +501,5 @@
 
     // 初始画布设置
     initSettingConfig();
-
-    // 初始化流程图
-    initFlow();
   });
 </script>

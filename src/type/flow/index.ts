@@ -32,6 +32,9 @@ export interface INode {
   icon?: string;
   id: string;
   nodeName: string;
+  flowType: string;
+  isBack: boolean;
+  isLoop: boolean;
   type: string;
   width: number;
   x: number;
@@ -42,7 +45,9 @@ export interface ILink {
   type: string;
   id: string;
   sourceId?: string;
+  sourceName?: string;
   targetId?: string;
+  targetName?: string;
   label: string;
   cls: {
     linkType: string;

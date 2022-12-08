@@ -356,6 +356,10 @@
     } else if (newNode.type === LaneNodeTypeEnum.Y_LANE) {
       newNode.height = 500;
       newNode.width = 200;
+    } else if(newNode.type === CommonNodeTypeEnum.COMMON) {
+      newNode.flowType = "parallel";
+      newNode.isBack = false;
+      newNode.isLoop = false;
     }
     unref(flowData).nodeList.push(newNode);
     emits('update:data', unref(flowData));

@@ -5,6 +5,10 @@ import type { FormProps, FormSchema } from '../types/form';
 import dayjs from "dayjs";
 import { set } from 'lodash-es';
 import { handleRangeValue } from '/@/components/Form/src/utils/formUtils';
+import { useUserStore } from '/@/store/modules/user';
+
+const userStore = useUserStore();
+const userinfo = userStore.getUserInfo;
 
 interface UseFormValuesContext {
   defaultValueRef: Ref<any>;
@@ -46,8 +50,21 @@ export function useFormValues({ defaultValueRef, getSchema, formModel, getProps 
     const schemas = unref(getSchema);
     const obj: Recordable = {};
     schemas.forEach((item) => {
-      const { defaultValue } = item;
+      let { defaultValue } = item;
       if (!isNullOrUnDef(defaultValue)) {
+        // zhangdj 2022-11-26 增加默认值设置 begin
+        if(defaultValue == "#{sysUserId}") {
+          defaultValue = userinfo.userId
+        } else if(defaultValue == "#{sysUserName}") {
+          defaultValue = userinfo.realname
+        } else if(defaultValue == "#{sysOrgId}") {
+          defaultValue = "暂时还没取到单位ID";
+        } else if(defaultValue == "#{sysOrgCode}") {
+          defaultValue = userinfo.orgCode;
+        } else if(defaultValue == "#{sysOrgName}") {
+          defaultValue = "暂时还没取到单位名称";
+        }
+        // zhangdj 2022-11-26 增加默认值设置 end
         obj[item.field] = defaultValue;
         formModel[item.field] = defaultValue;
       }

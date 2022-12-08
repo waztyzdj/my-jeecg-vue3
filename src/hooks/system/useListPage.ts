@@ -273,7 +273,9 @@ export function useListTable(tableProps: TableProps): [
   // 发送请求之前调用的方法
   function beforeFetch(params) {
     // 默认以 createTime 降序排序
-    return Object.assign({ column: 'createTime', order: 'desc' }, params);
+    // return Object.assign({ column: 'createTime', order: 'desc' }, params);
+    // 此处不再默认排序
+    return params;
   }
 
   // 合并方法
