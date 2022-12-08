@@ -166,8 +166,6 @@
   })
 
   function getFlowDataConfigJson() {
-    console.log("getFlowDataConfigJson");
-    console.log(JSON.stringify(flowData));
     return JSON.stringify(flowData);
   }
 
