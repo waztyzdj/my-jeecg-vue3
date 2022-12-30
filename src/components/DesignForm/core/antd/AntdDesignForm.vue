@@ -30,6 +30,7 @@
               @generateJson="handleGenerateJson"
               @generateCode="handleGenerateCode"
               @clearable="handleClearable"
+              @saveForm="handleSaveForm"
             >
               <slot name="header"></slot>
             </AntdHeader>
@@ -118,7 +119,7 @@
 
       <a-modal
         v-model:visible="dataCodeVisible"
-        title="生产代码"
+        title="生成代码"
         okText="Copy"
         :width="800"
         @ok="handleCopyClick(dataCodeTemplate)"
@@ -189,6 +190,10 @@ export default defineComponent({
       type: Boolean,
       default: true
     },
+    saveable: {
+      type: Boolean,
+      default: true
+    },
     basicFields: {
       type: Array as PropType<Array<string>>,
       default: () => [
@@ -216,7 +221,7 @@ export default defineComponent({
       default: () => ['grid']
     }
   },
-  setup() {
+  setup(props, { emit }) {
     const state = reactive({
       antd,
       codeType: CodeType,
@@ -304,6 +309,10 @@ export default defineComponent({
 
     const clear = () => handleClearable()
 
+    const handleSaveForm = () => {
+      emit('saveForm');
+    }
+
     return {
       ...toRefs(state),
       handleUploadJson,
@@ -316,7 +325,8 @@ export default defineComponent({
       getJson,
       setJson,
       getTemplate,
-      clear
+      clear,
+      handleSaveForm
     }
   }
 })

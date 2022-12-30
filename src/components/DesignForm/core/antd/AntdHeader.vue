@@ -16,6 +16,9 @@
     <a-button v-if="$attrs.generateCode" type="link" size="small" @click="$emit('generateCode')">
       <span><SvgIcon icon="ph:file-vue-light" /> 生成代码</span>
     </a-button>
+    <a-button v-if="$attrs.saveable" type="link" size="small" @click="$emit('saveForm')">
+      <span><SvgIcon icon="ic:outline-save" /> 保存</span>
+    </a-button>
   </a-layout-header>
 </template>
 
@@ -28,6 +31,6 @@ export default defineComponent({
   components: {
     SvgIcon,
   },
-  emits: ['uploadJson', 'clearable', 'preview', 'generateJson', 'generateCode'],
+  emits: ['uploadJson', 'clearable', 'preview', 'generateJson', 'generateCode', 'saveForm'],
 });
 </script>
